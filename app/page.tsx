@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import AuthForm from '../components/AuthForm';
+import ProductList from '@/components/ProductList';
 
 export default function Home() {
   return (
@@ -14,6 +15,8 @@ export default function Home() {
         <AuthForm mode="register" />
         <br />
         <AuthForm mode="login" />
+        <ProductList />
+
       </main>
     </div>
   );

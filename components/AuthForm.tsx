@@ -9,7 +9,7 @@ const StyledForm = styled(Paper)`
 `;
 
 const AuthForm = ({ mode }) => {
-  const [values, setValues] = useState({ email: '', password: '' });
+  const [values, setValues] = useState({ email: '', password: '', username: '' });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,6 +42,17 @@ const AuthForm = ({ mode }) => {
   return (
     <StyledForm elevation={3}>
       <Grid container spacing={2}>
+              <Grid item xs={12}>
+          <TextField
+            required
+            fullWidth
+            label="User name"
+            name="username"
+            autoComplete="username"
+            value={values.username}
+            onChange={handleInputChange}
+          />
+        </Grid>
         <Grid item xs={12}>
           <TextField
             required
