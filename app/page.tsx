@@ -1,9 +1,18 @@
+'use client'
+
 import Head from 'next/head';
 import AuthForm from '../components/AuthForm';
 import ProductList from '@/components/ProductList';
+import { Provider } from 'react-redux';
+import { setupStore } from '@/store/store';
 
 export default function Home() {
+
+  const store = setupStore();
   return (
+    <Provider store={store}>
+
+    
     <div className="container">
       <Head>
         <title>My Simple Store</title>
@@ -13,11 +22,11 @@ export default function Home() {
 
       <main>
         <AuthForm mode="register" />
-        <br />
         <AuthForm mode="login" />
         <ProductList />
 
       </main>
     </div>
+    </Provider>
   );
 }

@@ -1,53 +1,52 @@
+
 'use client'
+
+import { useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { useCreateProductMutation, useGetAllProductsQuery, useDeleteProductMutation, useGetProductByIdQuery } from '@/services/productsApi';
+
+
+
+
+// Оформление таблицы
 const StyledTable = styled(TableContainer)`
   width: 100%;
   overflow-x: auto;
 `;
 
+// Основной компонент ProductList
 const ProductList = () => {
-  const [products, setProducts] = useState([]); // массив товаров
-  const [newProduct, setNewProduct] = useState({ title: '', description: '', price: '', quantity: '' }); // состояние нового продукта
 
-  // Загружаем список товаров
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('/api/products/list');
-        const data = await response.json();
-        setProducts(data);
-      } catch (err) {
-        console.error(err);
-      }
+
+  const [ createProduct, { isLoading }] = useCreateProductMutation();
+  const [ deleteProduct, { isLoading: deleteProductLoading }] = useDeleteProductMutation();
+  const { data: products, isError } = useGetAllProductsQuery(); // получаем список товаров
+
+  // Загружаем товары при первом рендеринге
+
+  // Функция для добавления нового товара
+  const handleAddProduct = () => {
+    const newProduct = {
+      title: document.querySelector('#title-input')!.value.trim(), // получаем значение поля Title
+      description: document.querySelector('#description-input')!.value.trim(), // получаем значение Description
+      price: Number(document.querySelector('#price-input')!.value.trim()), // получаем число Price
+      quantity: Number(document.querySelector('#quantity-input')!.value.trim()), // получаем число Quantity
+      category: document.querySelector('#category-input')!.value.trim(), // получаем категорию
+      manufacturer: document.querySelector('#manufacturer-input')!.value.trim(), // получаем производителя
+      imageUrl: document.querySelector('#image-url-input')!.value.trim(), // получаем изображение
     };
 
-    fetchProducts();
-  }, []);
+    // Диспатчим создание нового товара
+    createProduct(newProduct)
+  };
 
-  // Отправляем новый продукт на сервер
-  const handleAddProduct = async () => {
-    try {
-      const response = await fetch('/api/products/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newProduct),
-      });
-
-      if (response.ok) {
-        const addedProduct = await response.json();
-        setProducts([...products, addedProduct]);
-        setNewProduct({ title: '', description: '', price: '', quantity: '' });
-      } else {
-        console.error('Ошибка при добавлении продукта:', await response.text());
-      }
-    } catch (err) {
-      console.error('Ошибка при добавлении продукта:', err);
-    }
+  // Функция для удаления товара
+  const handleDeleteProduct = (id) => {
+    console.log(id);
+    deleteProduct(id);
   };
 
   return (
@@ -58,16 +57,32 @@ const ProductList = () => {
           <TableHead>
             <TableRow>
               <TableCell>Title</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Manufacturer</TableCell>
+              <TableCell>Image Url</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Quantity</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((row) => (
+            {products?.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.title}</TableCell>
+                <TableCell>{row.category}</TableCell>
+                <TableCell>{row.manufacturer}</TableCell>
+                <TableCell>{row.imageUrl}</TableCell>
                 <TableCell align="right">{row.price.toFixed(2)} ₽</TableCell>
                 <TableCell align="right">{row.quantity}</TableCell>
+                <TableCell align="center">
+                  <Button
+                    size="small"
+                    color="secondary"
+                    variant="outlined"
+                    onClick={() => handleDeleteProduct(row.id)}
+                  >
+                    { deleteProductLoading ? 'Удаление' : 'Удалить '}
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -77,29 +92,44 @@ const ProductList = () => {
       {/* Форма добавления нового продукта */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
         <TextField
+          inputProps={{ id: 'title-input' }}
           label="Title"
-          value={newProduct.title}
-          onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
+          placeholder="Enter title..."
         />
         <TextField
+          inputProps={{ id: 'description-input' }}
           label="Description"
-          value={newProduct.description}
-          onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+          placeholder="Enter description..."
         />
         <TextField
+          inputProps={{ id: 'price-input' }}
           label="Price"
           type="number"
-          value={newProduct.price}
-          onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) })}
+          placeholder="Enter price..."
         />
         <TextField
+          inputProps={{ id: 'quantity-input' }}
           label="Quantity"
           type="number"
-          value={newProduct.quantity}
-          onChange={(e) => setNewProduct({ ...newProduct, quantity: Number(e.target.value) })}
+          placeholder="Enter quantity..."
+        />
+        <TextField
+          inputProps={{ id: 'category-input' }}
+          label="Category"
+          placeholder="Enter category..."
+        />
+        <TextField
+          inputProps={{ id: 'manufacturer-input' }}
+          label="Manufacturer"
+          placeholder="Enter manufacturer..."
+        />
+        <TextField
+          inputProps={{ id: 'image-url-input' }}
+          label="Image URL"
+          placeholder="Enter image URL..."
         />
         <Button variant="contained" color="primary" onClick={handleAddProduct}>
-          Add Product
+          { isLoading ? 'Загрузка...' : 'Добавить'}
         </Button>
       </div>
     </div>
