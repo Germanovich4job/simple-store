@@ -10,7 +10,8 @@ import {
   TableRow,
   Paper,
   TextField,
-  Button
+  Button,
+  Card
 } from '@mui/material';
 
 import styled from 'styled-components';
@@ -73,7 +74,7 @@ const ProductList = () => {
           </TableHead>
           <TableBody>
             {products?.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} className="hover:bg-gray-100 delay-120">
                 <TableCell>{row.title}</TableCell>
                 <TableCell>{row.category}</TableCell>
                 <TableCell>{row.manufacturer}</TableCell>
