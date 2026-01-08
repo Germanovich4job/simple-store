@@ -1,4 +1,5 @@
 import Head from 'next/head';
+
 import ProductList from '../components/ProductList';
 
 export default function ProductsPage() {
@@ -6,6 +7,7 @@ export default function ProductsPage() {
     <div className="container">
       <Head>
         <title>Product List</title>
+
         <meta name="description" content="List of available products." />
       </Head>
 
@@ -14,3 +16,4 @@ export default function ProductsPage() {
       </main>
     </div>
   );
+}

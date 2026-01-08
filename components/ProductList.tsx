@@ -1,33 +1,38 @@
-
-'use client'
+'use client';
 
 import { useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  Button
+} from '@mui/material';
+
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useCreateProductMutation, useGetAllProductsQuery, useDeleteProductMutation, useGetProductByIdQuery } from '@/services/productsApi';
+import {
+  useCreateProductMutation,
+  useGetAllProductsQuery,
+  useDeleteProductMutation,
+  useGetProductByIdQuery
+} from '@/services/productsApi';
 
-
-
-
-// Оформление таблицы
 const StyledTable = styled(TableContainer)`
   width: 100%;
   overflow-x: auto;
 `;
 
-// Основной компонент ProductList
 const ProductList = () => {
-
-
-  const [ createProduct, { isLoading }] = useCreateProductMutation();
-  const [ deleteProduct, { isLoading: deleteProductLoading }] = useDeleteProductMutation();
+  const [createProduct, { isLoading }] = useCreateProductMutation();
+  const [deleteProduct, { isLoading: deleteProductLoading }] = useDeleteProductMutation();
   const { data: products, isError } = useGetAllProductsQuery(); // получаем список товаров
 
-  // Загружаем товары при первом рендеринге
-
-  // Функция для добавления нового товара
   const handleAddProduct = () => {
     const newProduct = {
       title: document.querySelector('#title-input')!.value.trim(), // получаем значение поля Title
@@ -36,16 +41,18 @@ const ProductList = () => {
       quantity: Number(document.querySelector('#quantity-input')!.value.trim()), // получаем число Quantity
       category: document.querySelector('#category-input')!.value.trim(), // получаем категорию
       manufacturer: document.querySelector('#manufacturer-input')!.value.trim(), // получаем производителя
-      imageUrl: document.querySelector('#image-url-input')!.value.trim(), // получаем изображение
+      imageUrl: document.querySelector('#image-url-input')!.value.trim() // получаем изображение
     };
 
     // Диспатчим создание нового товара
-    createProduct(newProduct)
+
+    createProduct(newProduct);
   };
 
   // Функция для удаления товара
   const handleDeleteProduct = (id) => {
     console.log(id);
+
     deleteProduct(id);
   };
 
@@ -80,7 +87,7 @@ const ProductList = () => {
                     variant="outlined"
                     onClick={() => handleDeleteProduct(row.id)}
                   >
-                    { deleteProductLoading ? 'Удаление' : 'Удалить '}
+                    {deleteProductLoading ? 'Удаление' : 'Удалить '}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -90,46 +97,67 @@ const ProductList = () => {
       </StyledTable>
 
       {/* Форма добавления нового продукта */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          marginTop: '20px'
+        }}
+      >
         <TextField
-          inputProps={{ id: 'title-input' }}
+          inputProps={{
+            id: 'title-input'
+          }}
           label="Title"
           placeholder="Enter title..."
         />
         <TextField
-          inputProps={{ id: 'description-input' }}
+          inputProps={{
+            id: 'description-input'
+          }}
           label="Description"
           placeholder="Enter description..."
         />
         <TextField
-          inputProps={{ id: 'price-input' }}
+          inputProps={{
+            id: 'price-input'
+          }}
           label="Price"
           type="number"
           placeholder="Enter price..."
         />
         <TextField
-          inputProps={{ id: 'quantity-input' }}
+          inputProps={{
+            id: 'quantity-input'
+          }}
           label="Quantity"
           type="number"
           placeholder="Enter quantity..."
         />
         <TextField
-          inputProps={{ id: 'category-input' }}
+          inputProps={{
+            id: 'category-input'
+          }}
           label="Category"
           placeholder="Enter category..."
         />
         <TextField
-          inputProps={{ id: 'manufacturer-input' }}
+          inputProps={{
+            id: 'manufacturer-input'
+          }}
           label="Manufacturer"
           placeholder="Enter manufacturer..."
         />
         <TextField
-          inputProps={{ id: 'image-url-input' }}
+          inputProps={{
+            id: 'image-url-input'
+          }}
           label="Image URL"
           placeholder="Enter image URL..."
         />
         <Button variant="contained" color="primary" onClick={handleAddProduct}>
-          { isLoading ? 'Загрузка...' : 'Добавить'}
+          {isLoading ? 'Загрузка...' : 'Добавить'}
         </Button>
       </div>
     </div>

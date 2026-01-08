@@ -1,6 +1,7 @@
-'use client'
+'use client';
 import { TextField, Button, Paper, Grid } from '@mui/material';
 import styled from 'styled-components';
+
 import { useState } from 'react';
 
 const StyledForm = styled(Paper)`
@@ -9,7 +10,11 @@ const StyledForm = styled(Paper)`
 `;
 
 const AuthForm = ({ mode }) => {
-  const [values, setValues] = useState({ email: '', password: '', username: '' });
+  const [values, setValues] = useState({
+    email: '',
+    password: '',
+    username: ''
+  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -22,9 +27,9 @@ const AuthForm = ({ mode }) => {
       const response = await fetch(`/api/auth/${mode}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(values)
       });
 
       const result = await response.json();
@@ -42,7 +47,7 @@ const AuthForm = ({ mode }) => {
   return (
     <StyledForm elevation={3}>
       <Grid container spacing={2}>
-              <Grid item xs={12}>
+        <Grid item xs={12}>
           <TextField
             required
             fullWidth
@@ -77,12 +82,7 @@ const AuthForm = ({ mode }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            onClick={handleSubmit}
-          >
+          <Button type="submit" color="primary" variant="contained" onClick={handleSubmit}>
             {mode === 'register' ? 'Register' : 'Login'}
           </Button>
         </Grid>
